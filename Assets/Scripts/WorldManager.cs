@@ -8,20 +8,20 @@ using UnityEngine;
 public class WorldManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Transform  player;
-    [SerializeField] private RoadMover  tilePrefab;
+    [SerializeField] private Transform player;
+    [SerializeField] private RoadMover tilePrefab;
     [SerializeField] private ObjectPool pool;
 
     [Header("Road & Scrolling")]
-    [SerializeField, Min(2)] private int   tilesOnScreen     = 6;
-    [SerializeField]          private float baseSpeed        = 8f;
-    [SerializeField]          private float speedRamp        = 0.15f;
-    [SerializeField]          private float maxWorldSpeed    = 20f;
-    [SerializeField]          private float despawnBackZ     = 40f;
+    [SerializeField, Min(2)] private int tilesOnScreen = 6;
+    [SerializeField] private float baseSpeed = 8f;
+    [SerializeField] private float speedRamp = 0.15f;
+    [SerializeField] private float maxWorldSpeed = 20f;
+    [SerializeField] private float despawnBackZ = 40f;
 
     [Header("Obstacle Settings")]
     [Tooltip("Фиксированное число препятствий на сегмент")]
-    [SerializeField, Range(0,8)] private int obstaclesPerSegment = 6;
+    [SerializeField, Range(0, 8)] private int obstaclesPerSegment = 4;
     [Tooltip("Задержка перед первым спавном препятствий (сек)")]
     [SerializeField] private float obstacleDelaySeconds = 1f;
 
@@ -45,7 +45,7 @@ public class WorldManager : MonoBehaviour
 
         float dz = RoadMover.GlobalSpeed * Time.deltaTime;
         foreach (var t in tiles)
-            t.transform.Translate(0,0,-dz,Space.World);
+            t.transform.Translate(0, 0, -dz, Space.World);
 
         float despawnZ = player.position.z - despawnBackZ;
 
@@ -66,7 +66,7 @@ public class WorldManager : MonoBehaviour
             ? tiles[^1].transform.position.z + tiles[^1].Length
             : player.position.z;                      // fallback
 
-        t.transform.position = new Vector3(0,0,newZ);
+        t.transform.position = new Vector3(0, 0, newZ);
         SetupSegment(t);
         tiles.Add(t);
     }
@@ -94,6 +94,10 @@ public class WorldManager : MonoBehaviour
             SetupSegment(mover);
             tiles.Add(mover);
         }
+    }
+    public void SetObstaclesPerSegment(int value)
+    {
+        obstaclesPerSegment = Mathf.Clamp(value, 0, 8);
     }
 
     private void SetupSegment(RoadMover mover)

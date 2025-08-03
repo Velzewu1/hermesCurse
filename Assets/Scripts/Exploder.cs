@@ -43,6 +43,10 @@ public class Exploder : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Ambulance") || other.CompareTag("Player"))
+        {
+            other.GetComponent<PlayerDeath>()?.Die();
             Explode();
+            FindAnyObjectByType<ShockShooter>().DropCollectible();
+        }    
     }
 }

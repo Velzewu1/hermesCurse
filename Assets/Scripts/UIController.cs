@@ -3,21 +3,26 @@ using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
+    public static UIController Instance { get; private set; }   // <─ NEW
+
     public GameObject pauseMenuCanvas;
     public string exitSceneName = "MainMenu";
 
-    private bool isPaused = false;
+    bool isPaused;
 
-    void Update()
+    void Awake()                 // <─ NEW
     {
+        if (Instance && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
     }
 
+    /* optional Update removed */
+
+    /* ---------- Pause ---------- */
     public void TogglePause()
     {
-        if (isPaused)
-            ResumeGame();
-        else
-            PauseGame();
+        if (isPaused) ResumeGame();
+        else          PauseGame();
     }
 
     public void PauseGame()
@@ -34,14 +39,13 @@ public class UIController : MonoBehaviour
         isPaused = false;
     }
 
-    public void ExitToScene()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(exitSceneName);
-    }
+    /* ---------- Navigation ---------- */
+    public void ExitToScene() => SceneManager.LoadScene(exitSceneName);
+    public void QuitGame()    => Application.Quit();
 
-    public void QuitGame()
+    /* ---------- Phase message (stub) ---------- */
+    public void ShowPhaseMessage(string txt)      // <─ NEW
     {
-        Application.Quit();
+        Debug.Log($"[UI] {txt}");                 // позже заменим на реальный HUD
     }
 }

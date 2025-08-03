@@ -20,16 +20,16 @@ public class ShockShooter : MonoBehaviour
 
     /* ───── тайминги ───── */
     [Header("Timing (s)")]
-    [SerializeField] private float aimDuration   = 4f;
-    [SerializeField] private float followLag     = 3f;
+    [SerializeField] private float aimDuration = 4f;
+    [SerializeField] private float followLag = 3f;
     [SerializeField] private float lightningTime = 0.45f;
-    [SerializeField] private float cooldown      = 4f;
+    [SerializeField] private float cooldown = 4f;
 
     /* ───── поведение луча ───── */
     [Header("Laser look")]
     [SerializeField] private float baseWidth = 0.12f;              // макс. ширина прицела
     [SerializeField] private float lengthMul = 5f;                 // визуально длиннее
-    [SerializeField] private Color aimColor  = Color.red;          // цвет прицела
+    [SerializeField] private Color aimColor = Color.red;          // цвет прицела
 
     /* ───── Raycast ───── */
     [Header("Raycast")]
@@ -45,31 +45,36 @@ public class ShockShooter : MonoBehaviour
     [Header("Screen FX (optional)")]
     [SerializeField] private CinemachineImpulseSource impulse;
     [SerializeField] private Volume chromaVolume;
-    [SerializeField] private float  chromaWeight = 0.7f;
+    [SerializeField] private float chromaWeight = 0.7f;
+    
+    /* ───── collectible ───── */
+    [Header("Collectibles")]
+    [SerializeField] GameObject collectiblePrefab;
+    [SerializeField] float dropChance = 0.3f;   // 30 %
 
     /* ───── runtime ───── */
-    LineRenderer  lr;
-    AudioSource   audioSrc;
-    Transform     player;
-    float         timer;
+    LineRenderer lr;
+    AudioSource audioSrc;
+    Transform player;
+    float timer;
     AnimationCurve widthCurve;                                      // сохранённая кривая
 
     void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
-        lr       = GetComponent<LineRenderer>();
+        lr = GetComponent<LineRenderer>();
         audioSrc = GetComponent<AudioSource>();
 
         // если материал прицела не задан – создаём простой Unlit-красный
         if (!aimMat)
             aimMat = new Material(Shader.Find("Unlit/Color")) { color = aimColor };
 
-        widthCurve        = AnimationCurve.EaseInOut(0, 0.02f, 1, baseWidth);
-        lr.positionCount  = 2;
-        lr.enabled        = false;
-        lr.material       = aimMat;
-        lr.widthCurve     = widthCurve;
+        widthCurve = AnimationCurve.EaseInOut(0, 0.02f, 1, baseWidth);
+        lr.positionCount = 2;
+        lr.enabled = false;
+        lr.material = aimMat;
+        lr.widthCurve = widthCurve;
     }
 
     void Update()
@@ -106,8 +111,8 @@ public class ShockShooter : MonoBehaviour
             Vector3 desired = player.position + Vector3.up * 0.8f;
             aimPt = Vector3.Lerp(aimPt, desired, followLag * Time.deltaTime);
 
-            Vector3 dir  = (aimPt - transform.position).normalized;
-            float   dist = Vector3.Distance(transform.position, aimPt) * lengthMul;
+            Vector3 dir = (aimPt - transform.position).normalized;
+            float dist = Vector3.Distance(transform.position, aimPt) * lengthMul;
             lr.SetPosition(0, transform.position);
             lr.SetPosition(1, transform.position + dir * dist);
 
@@ -116,15 +121,15 @@ public class ShockShooter : MonoBehaviour
         audioSrc.Stop();
 
         /* 2. Выстрел */
-        lr.material   = lightningMat;
+        lr.material = lightningMat;
         lr.widthCurve = AnimationCurve.Constant(0, 1, baseWidth * 3f);
 
-        Vector3 dirShot    = (aimPt - transform.position).normalized;
-        float   strikeDist = Vector3.Distance(transform.position, aimPt);
+        Vector3 dirShot = (aimPt - transform.position).normalized;
+        float strikeDist = Vector3.Distance(transform.position, aimPt);
         lr.SetPosition(0, transform.position);
         lr.SetPosition(1, aimPt);
 
-        if (strikeSfx)  audioSrc.PlayOneShot(strikeSfx);
+        if (strikeSfx) audioSrc.PlayOneShot(strikeSfx);
         impulse?.GenerateImpulse(0.25f);
         if (chromaVolume) chromaVolume.weight = chromaWeight;
 
@@ -134,12 +139,25 @@ public class ShockShooter : MonoBehaviour
             hit.collider.GetComponent<PlayerDeath>()?.Die();
         }
 
+        DropCollectible();
+
         yield return new WaitForSeconds(lightningTime);
 
         /* 3. Сброс */
         lr.enabled = false;
-        lr.material   = aimMat;
+        lr.material = aimMat;
         lr.widthCurve = widthCurve;
         if (chromaVolume) chromaVolume.weight = 0f;
     }
+    public void DropCollectible()
+    {
+        if (!collectiblePrefab) return;
+        if (Random.value > dropChance) return;
+
+        Debug.Log("dropped");
+
+        Vector3 spawn = transform.position + Vector3.down * 0.5f; // из-под двери
+        Instantiate(collectiblePrefab, spawn, Quaternion.identity);
+    }
+
 }

@@ -1,29 +1,45 @@
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
+/// <summary>
+/// Синглтон, хранит текущее количество собранных предметов и отражает
+/// значение в UI-шкале (Image.fillAmount).
+/// </summary>
 public class CollectManager : MonoBehaviour
 {
-    public static CollectManager instance;
+    public static CollectManager Instance { get; private set; }
 
-    public int count = 0;
-    public TextMeshProUGUI collectibleText;
+    [Header("UI")]
+    [Tooltip("Image-шкала (тип Filled, Fill Method = Horizontal)")]
+    [SerializeField] private Image bar;          // заполняем в инспекторе
+    [Tooltip("Сколько collectible нужно, чтобы шкала была полной")]
+    [SerializeField] private int   maxCount = 10;
 
-    private void Awake()
+    int count;                                   // текущее значение
+
+    void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
+        if (Instance && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
     }
 
-    public void AddCollectible()
+    public void AddCollectible(int value = 1)
     {
-        count++;
+        count = Mathf.Min(count + value, maxCount);
         UpdateUI();
     }
 
-    private void UpdateUI()
+    /* ───── helpers ───── */
+    void UpdateUI()
     {
-        collectibleText.text = "������� ���: " + count;
+        if (bar)
+            bar.fillAmount = (float)count / maxCount;
+    }
+
+    /* сброс шкалы между фазами, если понадобится */
+    public void ResetCounter()
+    {
+        count = 0;
+        UpdateUI();
     }
 }

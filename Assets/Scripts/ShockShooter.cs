@@ -153,9 +153,7 @@ public class ShockShooter : MonoBehaviour
     {
         if (!collectiblePrefab) return;
         if (Random.value > dropChance) return;
-
-        Debug.Log("dropped");
-
+        
         Vector3 spawn = transform.position + Vector3.down * 0.5f; // из-под двери
         Instantiate(collectiblePrefab, spawn, Quaternion.identity);
     }

@@ -1,79 +1,80 @@
-using System;
+// GamePhaseManager.cs
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
-using Cinemachine;
 
 /// <summary>
-/// 3-фазный таймер (по 60 с каждая).  
-/// Фаза1 → Фаза2 → Фаза3 → End.
-/// • На смене фазы повышает obstaclesPerSegment (6 → 7 → 8).  
-/// • Выдаёт эвент <c>OnPhaseChanged</c> и вызывает
-///   <c>UIManager.ShowPhaseMessage("Герпес мутирует")</c>.
+/// 3-фазный таймер (по phaseDuration сек каждая).  
+/// Phase1 → Phase2 → Phase3 → End.
+/// • На смене фазы повышает obstaclesPerSegment в WorldManager (6→7→8).  
+/// • Выдаёт эвент OnPhaseChanged и сразу при старте уведомляет об Phase1.  
+/// • Вызывает UIController.ShowPhaseMessage("Герпес мутирует").
 /// </summary>
 public class GamePhaseManager : MonoBehaviour
 {
     public enum Phase { Phase1 = 0, Phase2 = 1, Phase3 = 2, End = 3 }
 
     [Header("References")]
-    [SerializeField] private WorldManager worldManager;   // присвойте в инспекторе
+    [SerializeField] private WorldManager worldManager;
 
     [Header("Timing (s)")]
-    [SerializeField] private float phaseDuration = 60f;   // длительность каждой фазы
+    [SerializeField] private float phaseDuration = 60f;
 
     public static GamePhaseManager Instance { get; private set; }
     public Phase CurrentPhase { get; private set; } = Phase.Phase1;
-    public UnityEvent<Phase> OnPhaseChanged;              // подписка UI / способностей
+    public UnityEvent<Phase> OnPhaseChanged = new UnityEvent<Phase>();
 
-    float timer;
+    private float timer;
 
-    /* ───── Unity ───── */
-    void Awake()
+    private void Awake()
     {
         if (Instance && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
+        OnPhaseChanged = OnPhaseChanged ?? new UnityEvent<Phase>();
     }
 
-    void Start()
+    private void Start()
     {
         timer = phaseDuration;
-        ApplyPhaseSettings();                      // применяем 1-ю фазу
-        OnPhaseChanged?.Invoke(CurrentPhase);      // даём знать подписчикам
+        ApplyPhaseSettings();
+        // сразу уведомляем об Phase1
+        OnPhaseChanged.Invoke(CurrentPhase);
         UIController.Instance?.ShowPhaseMessage("Герпес мутирует");
     }
 
-
-    void Update()
+    private void Update()
     {
         timer -= Time.deltaTime;
         if (timer <= 0f && CurrentPhase < Phase.End)
-        {
             AdvancePhase();
-        }
     }
 
-    /* ───── helpers ───── */
-    void AdvancePhase()
+    private void AdvancePhase()
     {
         timer = phaseDuration;
         CurrentPhase++;
         ApplyPhaseSettings();
-        OnPhaseChanged?.Invoke(CurrentPhase);
-
-        // UI-подсказка (реализуется позже)
+        OnPhaseChanged.Invoke(CurrentPhase);
         UIController.Instance?.ShowPhaseMessage("Герпес мутирует");
     }
 
-    void ApplyPhaseSettings()
+    private void ApplyPhaseSettings()
     {
-        if (!worldManager) return;
-
+        if (worldManager == null) return;
         switch (CurrentPhase)
         {
-            case Phase.Phase1: worldManager.SetObstaclesPerSegment(3); break;
-            case Phase.Phase2: worldManager.SetObstaclesPerSegment(5); break;
-            case Phase.Phase3: worldManager.SetObstaclesPerSegment(6); break;
-            default: break;
+            case Phase.Phase1:
+                worldManager.SetObstaclesPerSegment(4);
+                break;
+            case Phase.Phase2:
+                worldManager.SetObstaclesPerSegment(5);
+                break;
+            case Phase.Phase3:
+                worldManager.SetObstaclesPerSegment(6);
+                break;
+            default:
+                worldManager.SetObstaclesPerSegment(3);
+                break;
         }
     }
 }

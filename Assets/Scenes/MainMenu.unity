@@ -522,6 +522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48289ae56ecd7640a5639c5bc6a1a65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mutate: {fileID: 0}
   pauseMenuCanvas: {fileID: 0}
   exitSceneName: MainGame
 --- !u!4 &880070019
@@ -942,7 +943,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 880070018}
         m_TargetAssemblyTypeName: UIController, Assembly-CSharp
-        m_MethodName: ExitToScene
+        m_MethodName: AfterVideo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

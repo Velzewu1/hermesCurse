@@ -11,8 +11,8 @@ public sealed class PlayerControls : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float airSpeedMultiplier = 0.9f;
 
     [Header("Jump & Gravity")]
-    [SerializeField] private float jumpHeight = 2.2f;
-    [SerializeField] private float gravity = -18f;
+    public float jumpHeight           = 2.2f;
+    public float gravity              = -18f;
 
     [Header("Landing Damping")]
     [SerializeField] private float landingBounceSpeed = -2f;

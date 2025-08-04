@@ -136,6 +136,7 @@ public class ShockShooter : MonoBehaviour
         if (Physics.Raycast(transform.position, dirShot, out var hit, strikeDist) &&
             hit.collider.CompareTag("Player"))
         {
+            hit.collider.GetComponent<PlayerDeath>()?.SpawnExplosion();
             hit.collider.GetComponent<PlayerDeath>()?.Die();
         }
 

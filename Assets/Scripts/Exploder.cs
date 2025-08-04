@@ -18,21 +18,21 @@ public class Exploder : MonoBehaviour
     private bool hasExploded;
 
         public void Explode()
-    {
-        if (hasExploded) return;
-        hasExploded = true;
+        {
+            if (hasExploded) return;
+            hasExploded = true;
 
-        // 1) скрыть визуал и выключить коллайдеры ДО инстанса взрыва
-        foreach (var r in GetComponentsInChildren<Renderer>()) r.enabled = false;
-        foreach (var c in GetComponents<Collider>())           c.enabled = false;
+            // 1) скрыть визуал и выключить коллайдеры ДО инстанса взрыва
+            foreach (var r in GetComponentsInChildren<Renderer>()) r.enabled = false;
+            foreach (var c in GetComponents<Collider>())           c.enabled = false;
 
-        // 2) эффект (теперь не будет выключен)
-        if (explosionPrefab)
-            Instantiate(explosionPrefab, transform.position, Quaternion.identity, transform);
+            // 2) эффект (теперь не будет выключен)
+            if (explosionPrefab)
+                Instantiate(explosionPrefab, transform.position, Quaternion.identity, transform);
 
-        // 3) удалить после паузы
-        StartCoroutine(DelayedDestroy());
-    }
+            // 3) удалить после паузы
+            StartCoroutine(DelayedDestroy());
+        }
 
     private IEnumerator DelayedDestroy()
     {

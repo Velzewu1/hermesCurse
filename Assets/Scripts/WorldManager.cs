@@ -14,9 +14,9 @@ public class WorldManager : MonoBehaviour
 
     [Header("Road & Scrolling")]
     [SerializeField, Min(2)] private int tilesOnScreen = 6;
-    [SerializeField] private float baseSpeed = 8f;
-    [SerializeField] private float speedRamp = 0.15f;
-    [SerializeField] private float maxWorldSpeed = 20f;
+    [SerializeField] public float baseSpeed = 8f;
+    [SerializeField] public float speedRamp = 0.15f;
+    [SerializeField] public float maxWorldSpeed = 20f;
     [SerializeField] private float despawnBackZ = 40f;
 
     [Header("Obstacle Settings")]

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4030722762432781602}
   - component: {fileID: 7125381803880311409}
   m_Layer: 16
-  m_Name: Q_Vignette_Single
+  m_Name: CellVignette
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

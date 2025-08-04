@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2400737460041918043}
   m_Layer: 0
   m_Name: Car
-  m_TagString: Car
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,14 +29,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5726426125790296088}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 8, y: 7, z: 8}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4728874104668779039}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!33 &5663548136613411125
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -233,15 +233,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 3e521d75d71ef1e439160cbc6e86ac80, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.3
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3e521d75d71ef1e439160cbc6e86ac80, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.4
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3e521d75d71ef1e439160cbc6e86ac80, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.4
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3e521d75d71ef1e439160cbc6e86ac80, type: 3}
       propertyPath: m_LocalPosition.x
@@ -283,6 +283,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4519620648689758818, guid: 3e521d75d71ef1e439160cbc6e86ac80, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c73f107dc6513334898b7931a279ee47, type: 2}
     - target: {fileID: -2841043492896747004, guid: 3e521d75d71ef1e439160cbc6e86ac80, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -308,7 +312,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: b1b04779696fe7040831883ee44fd19b, type: 2}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8634596841688405075, guid: 3e521d75d71ef1e439160cbc6e86ac80, type: 3}
+    - {fileID: 3584201250049589343, guid: 3e521d75d71ef1e439160cbc6e86ac80, type: 3}
+    - {fileID: 856883289994301947, guid: 3e521d75d71ef1e439160cbc6e86ac80, type: 3}
+    - {fileID: 3411694420091561592, guid: 3e521d75d71ef1e439160cbc6e86ac80, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e521d75d71ef1e439160cbc6e86ac80, type: 3}

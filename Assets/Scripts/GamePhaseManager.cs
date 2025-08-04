@@ -64,13 +64,13 @@ public class GamePhaseManager : MonoBehaviour
         switch (CurrentPhase)
         {
             case Phase.Phase1:
-                worldManager.SetObstaclesPerSegment(4);
+                worldManager.SetObstaclesPerSegment(1);
                 break;
             case Phase.Phase2:
-                worldManager.SetObstaclesPerSegment(5);
+                worldManager.SetObstaclesPerSegment(2);
                 break;
             case Phase.Phase3:
-                worldManager.SetObstaclesPerSegment(6);
+                worldManager.SetObstaclesPerSegment(3);
                 break;
             default:
                 worldManager.SetObstaclesPerSegment(7);

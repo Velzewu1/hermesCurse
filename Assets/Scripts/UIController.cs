@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 public class UIController : MonoBehaviour
 {
     public static UIController Instance { get; private set; }
-
+    public GameObject mutate;
     public GameObject pauseMenuCanvas;
     public string exitSceneName = "MainMenu";
 
@@ -55,6 +55,6 @@ public class UIController : MonoBehaviour
     /* ---------- Phase message (stub) ---------- */
     public void ShowPhaseMessage(string txt)
     {
-        Debug.Log($"[UI] {txt}");
+        mutate.SetActive(true);
     }
 }

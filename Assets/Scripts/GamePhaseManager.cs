@@ -73,7 +73,7 @@ public class GamePhaseManager : MonoBehaviour
                 worldManager.SetObstaclesPerSegment(6);
                 break;
             default:
-                worldManager.SetObstaclesPerSegment(3);
+                worldManager.SetObstaclesPerSegment(7);
                 break;
         }
     }

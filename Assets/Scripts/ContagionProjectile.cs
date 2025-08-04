@@ -1,9 +1,12 @@
 using UnityEngine;
+using System.Collections;
 
 /// <summary>
 /// Визуальный снаряд для способности Contagion Spray.
-/// Движется вперёд со скоростью speed, автоматически уничтожается через lifetime
-/// и при столкновении с «скорая» сообщает ContagionSpray о попадании.
+/// • Двигается вперёд со скоростью speed,
+/// • при запуске спавнит и запускает launchEffect,
+/// • при попадании срабатывает hitEffect,
+/// • автоматически уничтожается через lifetime.
 /// </summary>
 [RequireComponent(typeof(Collider))]
 public class ContagionProjectile : MonoBehaviour
@@ -13,14 +16,33 @@ public class ContagionProjectile : MonoBehaviour
     [Tooltip("Время жизни снаряда (сек)")]
     public float lifetime = 5f;
 
+    [Header("Effects")]
+    [Tooltip("Префаб эффекта при запуске снаряда")]
+    [SerializeField] private ParticleSystem launchEffectPrefab;
+    [Tooltip("Префаб эффекта при попадании")]
+    [SerializeField] private ParticleSystem hitEffectPrefab;
+
+    private ParticleSystem launchEffectInstance;
+
     private void Start()
     {
+        // запускаем эффект при старте
+        if (launchEffectPrefab)
+        {
+            launchEffectInstance = Instantiate(
+                launchEffectPrefab,
+                transform.position,
+                transform.rotation,
+                transform);
+            launchEffectInstance.Play();
+        }
+        // автоматическое уничтожение
         Destroy(gameObject, lifetime);
     }
 
     private void Update()
     {
-        // простое движение вперёд по локальной Z
+        // движемся вперёд
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
     }
 
@@ -28,9 +50,24 @@ public class ContagionProjectile : MonoBehaviour
     {
         if (other.CompareTag("Ambulance"))
         {
-            // регистрируем попадание
+            // эффект попадания
+            if (hitEffectPrefab)
+            {
+                var hitEffect = Instantiate(
+                    hitEffectPrefab,
+                    transform.position,
+                    Quaternion.identity);
+                hitEffect.Play();
+            }
+            // сообщаем о попадании
             ContagionSpray.Instance?.RegisterHit(other.gameObject);
-            // уничтожаем снаряд
+            // остановить запущенный эффект и уничтожить
+            if (launchEffectInstance)
+            {
+                launchEffectInstance.Stop();
+                launchEffectInstance.transform.SetParent(null);
+                Destroy(launchEffectInstance.gameObject, 2f);
+            }
             Destroy(gameObject);
         }
     }

@@ -44,6 +44,8 @@ public class UIController : MonoBehaviour
     /* ---------- Navigation ---------- */
     public void ExitToScene() => SceneManager.LoadScene(exitSceneName);
 
+    public void AfterVideo() => SceneManager.LoadScene("Video");
+
     public void QuitGame() => Application.Quit();
 
     public void RestartScene()

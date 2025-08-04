@@ -522,6 +522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48289ae56ecd7640a5639c5bc6a1a65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mutate: {fileID: 0}
   pauseMenuCanvas: {fileID: 0}
   exitSceneName: MainGame
 --- !u!4 &880070019
@@ -817,10 +818,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2115899841}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920, y: 1080}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 7.1071, y: 0}
+  m_SizeDelta: {x: 14.2142, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1137727796
 MonoBehaviour:
@@ -891,10 +892,10 @@ RectTransform:
   - {fileID: 1258926602}
   m_Father: {fileID: 2115899841}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -305, y: 130}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchorMin: {x: 0.13700001, y: 0.5}
+  m_AnchorMax: {x: 0.45933604, y: 0.60131913}
+  m_AnchoredPosition: {x: -2.5, y: -2}
+  m_SizeDelta: {x: -323, y: -46}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1167376686
 MonoBehaviour:
@@ -942,7 +943,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 880070018}
         m_TargetAssemblyTypeName: UIController, Assembly-CSharp
-        m_MethodName: ExitToScene
+        m_MethodName: AfterVideo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6237,10 +6238,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2115899841}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -68, y: -84}
-  m_SizeDelta: {x: 497.2236, y: 68.9465}
+  m_AnchorMin: {x: 0.011340014, y: 0.72300005}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 1, y: 2}
+  m_SizeDelta: {x: -984.77637, y: -139.0535}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1892407739
 MonoBehaviour:
@@ -6375,10 +6376,10 @@ RectTransform:
   - {fileID: 1375503054}
   m_Father: {fileID: 2115899841}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -305, y: -45}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchorMin: {x: 0.13700001, y: 0.25234044}
+  m_AnchorMax: {x: 0.45933604, y: 0.37230855}
+  m_AnchoredPosition: {x: -2.5, y: -2}
+  m_SizeDelta: {x: -323, y: -60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1915920116
 MonoBehaviour:

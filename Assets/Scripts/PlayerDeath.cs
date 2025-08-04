@@ -21,6 +21,7 @@ public class PlayerDeath : MonoBehaviour
         // если уже мёртв или неуязвим — не умираем
         if (isDead || IsInvulnerable) return;
         isDead = true;
+        Time.timeScale = 0f;
 
         // 1. отключаем управление
         var controls = GetComponent<PlayerControls>();

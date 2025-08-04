@@ -32,6 +32,7 @@ public class WorldManager : MonoBehaviour
     {
         RoadMover.GlobalSpeed = baseSpeed;
         SpawnInitialTiles();
+        Time.timeScale = 1f;
     }
 
     private void Update()

@@ -12,8 +12,10 @@ public class UIController : MonoBehaviour
 
     void Awake()                 // <─ NEW
     {
-        if (Instance && Instance != this) { Destroy(gameObject); return; }
-        Instance = this;
+        if (Instance && Instance != this) {
+            Destroy(this);
+            return;
+        }
     }
 
     /* optional Update removed */

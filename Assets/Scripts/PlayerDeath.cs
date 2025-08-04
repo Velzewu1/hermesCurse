@@ -3,6 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Простая «смерть» игрока: делает персонажа невидимым, отключает управление
 /// и коллизии. Используйте <c>GetComponent<PlayerDeath>().Die()</c>.
+/// Вместо вызова Die() напрямую, учитывается флаг IsInvulnerable.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 public class PlayerDeath : MonoBehaviour
@@ -11,11 +12,14 @@ public class PlayerDeath : MonoBehaviour
     [SerializeField] private GameObject gameOverScreen;
 
     private bool isDead;
+    /// <summary>Игрок неуязвим, Die() не срабатывает.</summary>
+    public static bool IsInvulnerable { get; set; }
 
     /// <summary>Вызывается внешним скриптом (например ShockShooter).</summary>
     public void Die()
     {
-        if (isDead) return;
+        // если уже мёртв или неуязвим — не умираем
+        if (isDead || IsInvulnerable) return;
         isDead = true;
 
         // 1. отключаем управление
@@ -26,7 +30,7 @@ public class PlayerDeath : MonoBehaviour
         foreach (var r in GetComponentsInChildren<Renderer>())
             r.enabled = false;
 
-        // 3. отключаем коллизию, чтобы не мешать дальнейшей логике
+        // 3. отключаем коллизию и контроллер
         var cc = GetComponent<CharacterController>();
         if (cc) cc.enabled = false;
         foreach (var col in GetComponentsInChildren<Collider>())

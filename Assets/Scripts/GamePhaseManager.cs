@@ -39,7 +39,7 @@ public class GamePhaseManager : MonoBehaviour
         ApplyPhaseSettings();
         // сразу уведомляем об Phase1
         OnPhaseChanged.Invoke(CurrentPhase);
-        UIController.Instance?.ShowPhaseMessage("Герпес мутирует");
+        PhaseMessageController.Instance?.ShowMessage("HERMES IS MUTATING");
     }
 
     private void Update()
@@ -55,7 +55,7 @@ public class GamePhaseManager : MonoBehaviour
         CurrentPhase++;
         ApplyPhaseSettings();
         OnPhaseChanged.Invoke(CurrentPhase);
-        UIController.Instance?.ShowPhaseMessage("Герпес мутирует");
+        PhaseMessageController.Instance?.ShowMessage("HERMES IS MUTATING");
     }
 
     private void ApplyPhaseSettings()

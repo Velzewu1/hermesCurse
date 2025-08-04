@@ -70,5 +70,10 @@ public class ContagionProjectile : MonoBehaviour
             }
             Destroy(gameObject);
         }
+        if (other.CompareTag("Car"))
+        {
+            other.GetComponent<Exploder>().Explode();
+            Destroy(gameObject);
+        }
     }
 }

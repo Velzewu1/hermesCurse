@@ -4,59 +4,50 @@ using UnityEngine.SceneManagement;
 public class UIController : MonoBehaviour
 {
     public static UIController Instance { get; private set; }
-    public GameObject mutate;
-    public GameObject pauseMenuCanvas;
-    public string exitSceneName = "MainMenu";
+
+    [Header("Pause Menu")]
+    [SerializeField] private GameObject pauseMenuCanvas;
+    [SerializeField] private string exitSceneName = "MainMenu";
 
     bool isPaused;
 
-    void Awake()
+    private void Awake()
     {
-        if (Instance && Instance != this)
-        {
-            Destroy(this);
-            return;
-        }
+        if (Instance && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
+        pauseMenuCanvas?.SetActive(false);
     }
 
-    /* ---------- Pause ---------- */
+    #region Pause
     public void TogglePause()
     {
         if (isPaused) ResumeGame();
-        else PauseGame();
+        else          PauseGame();
     }
 
     public void PauseGame()
     {
         Time.timeScale = 0f;
-        pauseMenuCanvas.SetActive(true);
+        pauseMenuCanvas?.SetActive(true);
         isPaused = true;
     }
 
     public void ResumeGame()
     {
         Time.timeScale = 1f;
-        pauseMenuCanvas.SetActive(false);
+        pauseMenuCanvas?.SetActive(false);
         isPaused = false;
     }
+    #endregion
 
-    /* ---------- Navigation ---------- */
-    public void ExitToScene() => SceneManager.LoadScene(exitSceneName);
-
-    public void AfterVideo() => SceneManager.LoadScene("Video");
-
-    public void QuitGame() => Application.Quit();
-
+    #region Navigation
+    public void ExitToScene()    => SceneManager.LoadScene(exitSceneName);
+    public void AfterVideo()     => SceneManager.LoadScene("Video");
+    public void QuitGame()       => Application.Quit();
     public void RestartScene()
     {
-        Time.timeScale = 1f; // обязательно сбрасываем перед рестартом
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
-    /* ---------- Phase message (stub) ---------- */
-    public void ShowPhaseMessage(string txt)
-    {
-        mutate.SetActive(true);
-    }
+    #endregion
 }

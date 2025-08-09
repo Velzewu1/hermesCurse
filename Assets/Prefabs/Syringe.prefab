@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3750d41639efdd84ab2d0e0632d61c28, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -1.01
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3750d41639efdd84ab2d0e0632d61c28, type: 3}
       propertyPath: m_LocalPosition.z
@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
+    - target: {fileID: 7202271454713460447, guid: 3750d41639efdd84ab2d0e0632d61c28, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c76bef32a6eb51e4cb861358854ab59a, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -94,8 +98,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2, z: 1}
-  m_Center: {x: -0.2, y: 3, z: -0.2}
+  m_Size: {x: 1.403697, y: 2.999257, z: 1.9390037}
+  m_Center: {x: -0.42801023, y: 2.5003715, z: -0.08625734}
 --- !u!114 &6214533482918619751
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -25,7 +25,9 @@ public class ObjectPool : MonoBehaviour
     }
     private GameObject Get(GameObject prefab)
     {
-        if (!pools.TryGetValue(prefab, out var q)) pools[prefab] = q = new Queue<GameObject>();
+        if (!pools.TryGetValue(prefab, out var q))
+            pools[prefab] = q = new Queue<GameObject>();
+
         if (q.Count == 0)
         {
             var inst = Instantiate(prefab, transform);
@@ -33,8 +35,21 @@ public class ObjectPool : MonoBehaviour
             reverse[inst] = prefab;
             q.Enqueue(inst);
         }
+
         var obj = q.Dequeue();
         obj.SetActive(true);
+
+        // --- Поворачиваем объект, если он из obstaclePrefabs ---
+        if (System.Array.Exists(obstaclePrefabs, p => p == prefab))
+        {
+            obj.transform.rotation = Quaternion.Euler(0f, 180f, 0f); // по Y
+        }
+        else
+        {
+            obj.transform.rotation = Quaternion.identity; // нормальный поворот для других
+        }
+
         return obj;
     }
+
 }

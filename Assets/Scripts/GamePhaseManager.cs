@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// 3-фазный таймер (по phaseDuration сек каждая).  
-/// Phase1 → Phase2 → Phase3 → End.
-/// • На смене фазы повышает obstaclesPerSegment в WorldManager (6→7→8).  
-/// • Выдаёт эвент OnPhaseChanged и сразу при старте уведомляет об Phase1.  
-/// • Вызывает UIController.ShowPhaseMessage("Герпес мутирует").
+/// 3‑фазный таймер (по phaseDuration сек каждая).
+/// Phases: Phase1 → Phase2 → Phase3 → End.
+/// При смене фазы:
+/// • увеличивает obstaclesPerSegment в WorldManager;
+/// • вызывает OnPhaseChanged;
+/// • выводит сообщение через PhaseMessageController;
+/// • проигрывает звуковой клип от позиции MainCamera.
 /// </summary>
 public class GamePhaseManager : MonoBehaviour
 {
@@ -20,6 +22,12 @@ public class GamePhaseManager : MonoBehaviour
     [Header("Timing (s)")]
     [SerializeField] private float phaseDuration = 60f;
 
+    [Header("Audio Clips")]
+    [SerializeField] private AudioClip phase1Clip;
+    [SerializeField] private AudioClip phase2Clip;
+    [SerializeField] private AudioClip phase3Clip;
+    [SerializeField] private AudioClip endPhaseClip;
+
     public static GamePhaseManager Instance { get; private set; }
     public Phase CurrentPhase { get; private set; } = Phase.Phase1;
     public UnityEvent<Phase> OnPhaseChanged = new UnityEvent<Phase>();
@@ -28,7 +36,11 @@ public class GamePhaseManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance && Instance != this) { Destroy(gameObject); return; }
+        if (Instance && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
         OnPhaseChanged = OnPhaseChanged ?? new UnityEvent<Phase>();
     }
@@ -37,9 +49,7 @@ public class GamePhaseManager : MonoBehaviour
     {
         timer = phaseDuration;
         ApplyPhaseSettings();
-        // сразу уведомляем об Phase1
         OnPhaseChanged.Invoke(CurrentPhase);
-        UIController.Instance?.ShowPhaseMessage("Герпес мутирует");
     }
 
     private void Update()
@@ -55,26 +65,46 @@ public class GamePhaseManager : MonoBehaviour
         CurrentPhase++;
         ApplyPhaseSettings();
         OnPhaseChanged.Invoke(CurrentPhase);
-        UIController.Instance?.ShowPhaseMessage("Герпес мутирует");
     }
 
     private void ApplyPhaseSettings()
     {
         if (worldManager == null) return;
+
+        string msg = string.Empty;
+        AudioClip clip = null;
+
         switch (CurrentPhase)
         {
             case Phase.Phase1:
-                worldManager.SetObstaclesPerSegment(4);
+                msg = "SYMBIOSIS ESTABLISHED";
+                worldManager.SetObstaclesPerSegment(3);
+                clip = phase1Clip;
                 break;
             case Phase.Phase2:
+                msg = "HERMES IS MUTATING CELL PHASE";
                 worldManager.SetObstaclesPerSegment(5);
+                clip = phase2Clip;
                 break;
             case Phase.Phase3:
-                worldManager.SetObstaclesPerSegment(6);
+                msg = "HERMES IS MUTATING VIRAL OVERCLOCK";
+                worldManager.SetObstaclesPerSegment(5);
+                clip = phase3Clip;
                 break;
-            default:
-                worldManager.SetObstaclesPerSegment(3);
+            case Phase.End:
+                msg = "HERMES IS MUTATING KILL EM ALL";
+                worldManager.SetObstaclesPerSegment(7);
+                clip = endPhaseClip;
                 break;
+        }
+
+        PhaseMessageController.Instance?.ShowMessage(msg);
+
+        if (clip != null)
+        {
+            var cam = GameObject.FindGameObjectWithTag("Player").GetComponent<AudioSource>();
+            if (cam != null)
+                cam.PlayOneShot(clip);
         }
     }
 }

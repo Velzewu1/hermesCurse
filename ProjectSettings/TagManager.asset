@@ -7,15 +7,16 @@ TagManager:
   - Car
   - Pit
   - Ambulance
+  - MainCanvas
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ambulance
   - Water
   - UI
-  - 
-  - 
+  - Pit
+  - Camera
   - 
   - 
   - 

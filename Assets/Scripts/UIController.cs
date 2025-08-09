@@ -3,22 +3,22 @@ using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
-    public static UIController Instance { get; private set; }   // <─ NEW
+    public static UIController Instance { get; private set; }
 
-    public GameObject pauseMenuCanvas;
-    public string exitSceneName = "MainMenu";
+    [Header("Pause Menu")]
+    [SerializeField] private GameObject pauseMenuCanvas;
+    [SerializeField] private string exitSceneName = "MainMenu";
 
     bool isPaused;
 
-    void Awake()                 // <─ NEW
+    private void Awake()
     {
         if (Instance && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
+        pauseMenuCanvas?.SetActive(false);
     }
 
-    /* optional Update removed */
-
-    /* ---------- Pause ---------- */
+    #region Pause
     public void TogglePause()
     {
         if (isPaused) ResumeGame();
@@ -28,24 +28,26 @@ public class UIController : MonoBehaviour
     public void PauseGame()
     {
         Time.timeScale = 0f;
-        pauseMenuCanvas.SetActive(true);
+        pauseMenuCanvas?.SetActive(true);
         isPaused = true;
     }
 
     public void ResumeGame()
     {
         Time.timeScale = 1f;
-        pauseMenuCanvas.SetActive(false);
+        pauseMenuCanvas?.SetActive(false);
         isPaused = false;
     }
+    #endregion
 
-    /* ---------- Navigation ---------- */
-    public void ExitToScene() => SceneManager.LoadScene(exitSceneName);
-    public void QuitGame()    => Application.Quit();
-
-    /* ---------- Phase message (stub) ---------- */
-    public void ShowPhaseMessage(string txt)      // <─ NEW
+    #region Navigation
+    public void ExitToScene()    => SceneManager.LoadScene(exitSceneName);
+    public void AfterVideo()     => SceneManager.LoadScene("Video");
+    public void QuitGame()       => Application.Quit();
+    public void RestartScene()
     {
-        Debug.Log($"[UI] {txt}");                 // позже заменим на реальный HUD
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+    #endregion
 }

@@ -8,9 +8,9 @@
 
 ## 📖 About the Game
 
-**Hermes Curse** is a solo horror-action experience created for the **NUGDC Summer Game Jam**. Inspired by the gritty atmosphere and visual style of late-90s PC titles, it delivers a haunting and surreal journey into infection, obsession, and transformation.
+**Hermes Curse** is an action-driven single player runner game created for the **NUGDC Summer Game Jam**. Inspired by the gritty atmosphere and visual style of late-90s PC titles, it delivers a humorous and epic journey into symbiosis with infection.
 
-You play as a desperate man infected by the **Hermes virus**—a mysterious and rapidly mutating pathogen. After a failed attempt to purchase treatment, your character spirals into madness and vengeance, hunting down corrupt pharmacists responsible for hoarding the cure.
+You play as a desperate man infected by the **Hermes virus**. After a failed attempt to purchase treatment, your character spirals into madness and vengeance, hunting down corrupt pharmacists responsible for hoarding the cure.
 
 As the infection mutates, your relationship with the virus begins to evolve—forming a **symbiotic (and not entirely consensual)** bond.
 

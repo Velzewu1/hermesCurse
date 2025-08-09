@@ -29,13 +29,6 @@ public class ContagionProjectile : MonoBehaviour
 
     private ParticleSystem launchEffectInstance;
 
-    [Header("Effects")]
-    [Tooltip("Префаб эффекта при запуске снаряда")]
-    [SerializeField] private ParticleSystem launchEffectPrefab;
-    [Tooltip("Префаб эффекта при попадании")]
-    [SerializeField] private ParticleSystem hitEffectPrefab;
-
-    private ParticleSystem launchEffectInstance;
 
     private void Start()
     {

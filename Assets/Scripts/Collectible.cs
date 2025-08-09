@@ -4,79 +4,69 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Collectible : MonoBehaviour
 {
-    /* ───── Inspector ───── */
     [Header("Drop physics")]
-    [SerializeField] float dropImpulse   = 5f;    // сила падения вниз
-    [SerializeField] float settleDelay   = 0.4f;  // время полёта
+    [SerializeField] private float dropImpulse = 5f;    // сила падения вниз
+    [SerializeField] private float settleDelay = 0.4f;  // время полёта
 
     [Header("Movement")]
     [Tooltip("Множитель скорости относительно тайлов")]
-    [SerializeField] float speedFactor = 1.2f;    // чуть быстрее дороги
+    [SerializeField] private float speedFactor = 1.2f;  
     [Tooltip("Удалить, если позади игрока дальше этого расстояния")]
-    [SerializeField] float despawnBackZ = 30f;
+    [SerializeField] private float despawnBackZ = 30f;
 
     [Header("Visual FX")]
-    [SerializeField] float  rotationSpeed = 180f;          // °/сек
-    [SerializeField] Color  glowColor     = Color.red;     // оттенок свечения
-    [SerializeField] float  glowIntensity = 4f;            // HDR множитель
+    [SerializeField] private float rotationSpeed = 180f; // °/сек
 
-    /* ───── runtime ───── */
-    Rigidbody   rb;
-    Transform   player;
-    Renderer    rend;
-    bool        settled;
+    private Rigidbody rb;
+    private Transform player;
+    private bool settled;
 
-    /* ───── lifecycle ───── */
-    void Awake()
+    private void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        player = GameObject.FindWithTag("Player")?.transform;
 
-        rb   = GetComponent<Rigidbody>() ?? gameObject.AddComponent<Rigidbody>();
+        // Настраиваем Rigidbody
+        rb = GetComponent<Rigidbody>() ?? gameObject.AddComponent<Rigidbody>();
         rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        rb.interpolation          = RigidbodyInterpolation.Interpolate;
-
-        rend = GetComponentInChildren<Renderer>();
-        if (rend && rend.material.HasProperty("_EmissionColor"))
-        {
-            rend.material.EnableKeyword("_EMISSION");
-            rend.material.SetColor("_EmissionColor", glowColor * glowIntensity);
-        }
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
+        // Бросок вниз и начало посадки
         rb.AddForce(Vector3.down * dropImpulse, ForceMode.Impulse);
         StartCoroutine(SettleRoutine());
     }
 
-    IEnumerator SettleRoutine()
+    private IEnumerator SettleRoutine()
     {
         yield return new WaitForSeconds(settleDelay);
 
-        rb.linearVelocity         = Vector3.zero;
+        // Останавливаем физику
+        rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.isKinematic     = true;
-        rb.useGravity      = false;
-        settled            = true;
+        rb.isKinematic = true;
+        rb.useGravity = false;
+        settled = true;
     }
 
-    /* ───── main loop ───── */
-    void Update()
+    private void Update()
     {
-        // декоративное вращение всегда
+        // Постоянное вращение
         transform.Rotate(0f, rotationSpeed * Time.deltaTime, 0f, Space.World);
 
         if (!settled) return;
 
+        // Движение вместе с дорожкой
         float dz = RoadMover.GlobalSpeed * speedFactor * Time.deltaTime;
-        transform.Translate(0, 0, -dz, Space.World);
+        transform.Translate(0f, 0f, -dz, Space.World);
 
-        if (player && transform.position.z < player.position.z - despawnBackZ)
+        // Самоуничтожение, если слишком позади
+        if (player != null && transform.position.z < player.position.z - despawnBackZ)
             Destroy(gameObject);
     }
 
-    /* ───── pickup ───── */
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {

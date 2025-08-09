@@ -18,9 +18,10 @@ public class Faller : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.GetComponent<PlayerDeath>()?.FallAndDie();
-            other.GetComponent<PlayerDeath>()?.Die();
-            FindAnyObjectByType<ShockShooter>().DropCollectible();
+            PlayerDeath.IsInvulnerable = false;
+            var playerDeath = other.GetComponent<PlayerDeath>();
+            playerDeath?.FallAndDie();
+            playerDeath?.Die();
         }    
     }
 }

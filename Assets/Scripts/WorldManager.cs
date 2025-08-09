@@ -3,7 +3,7 @@ using UnityEngine;
 
 /// <summary>
 /// Управляет генерацией дорожных сегментов и жёстким контролем плотности препятствий,
-/// с задержкой перед первым спавном.
+/// с задержкой перед первым спавном в виде зоны близко к игроку (по Z).
 /// </summary>
 public class WorldManager : MonoBehaviour
 {
@@ -13,20 +13,19 @@ public class WorldManager : MonoBehaviour
     [SerializeField] private ObjectPool pool;
 
     [Header("Road & Scrolling")]
-    [SerializeField, Min(2)] private int tilesOnScreen = 6;
-    [SerializeField] public float baseSpeed = 8f;
-    [SerializeField] public float speedRamp = 0.15f;
-    [SerializeField] public float maxWorldSpeed = 20f;
-    [SerializeField] private float despawnBackZ = 40f;
+    [SerializeField, Min(2)] private int tilesOnScreen   = 6;
+    [SerializeField]          public float baseSpeed      = 8f;
+    [SerializeField]          public float speedRamp      = 0.15f;
+    [SerializeField]          public float maxWorldSpeed  = 20f;
+    [SerializeField] private float despawnBackZ          = 40f;
 
     [Header("Obstacle Settings")]
     [Tooltip("Фиксированное число препятствий на сегмент")]
     [SerializeField, Range(0, 8)] private int obstaclesPerSegment = 4;
-    [Tooltip("Задержка перед первым спавном препятствий (сек)")]
-    [SerializeField] private float obstacleDelaySeconds = 1f;
+    [Tooltip("Расстояние по Z от игрока, в пределах которого препятствия не спавнятся")]
+    [SerializeField] private float obstacleDelayDistance = 10f;
 
     private readonly List<RoadMover> tiles = new();
-    private float time;
 
     private void Start()
     {
@@ -37,9 +36,9 @@ public class WorldManager : MonoBehaviour
 
     private void Update()
     {
-        if (tiles.Count == 0) return;                 // ❶ защита
+        if (tiles.Count == 0) return;
 
-        time += Time.deltaTime;
+        // Рамп скорости мира
         RoadMover.GlobalSpeed = Mathf.Min(
             RoadMover.GlobalSpeed + speedRamp * Time.deltaTime,
             maxWorldSpeed);
@@ -49,32 +48,13 @@ public class WorldManager : MonoBehaviour
             t.transform.Translate(0, 0, -dz, Space.World);
 
         float despawnZ = player.position.z - despawnBackZ;
-
-        // ❷ проверяем снова, вдруг за время перемещения список стал пуст
-        if (tiles.Count > 0 &&
-            tiles[0].transform.position.z + tiles[0].Length * 0.5f <= despawnZ)
+        if (tiles[0].transform.position.z + tiles[0].Length * 0.5f <= despawnZ)
             RecycleFirst();
     }
 
-    private void RecycleFirst()
-    {
-        if (tiles.Count == 0) return;                 // ❸ защита
-
-        var t = tiles[0];
-        tiles.RemoveAt(0);
-
-        float newZ = tiles.Count > 0
-            ? tiles[^1].transform.position.z + tiles[^1].Length
-            : player.position.z;                      // fallback
-
-        t.transform.position = new Vector3(0, 0, newZ);
-        SetupSegment(t);
-        tiles.Add(t);
-    }
-
-
     private void SpawnInitialTiles()
     {
+        // Первый тайл позиционируем прямо под игроком
         var first = Instantiate(tilePrefab, transform);
         first.Init();
         first.transform.position = new Vector3(
@@ -83,6 +63,7 @@ public class WorldManager : MonoBehaviour
         SetupSegment(first);
         tiles.Add(first);
 
+        // Остальные тайлы в конец
         for (int i = 1; i < tilesOnScreen; i++)
         {
             float z = tiles[^1].transform.position.z + tiles[^1].Length;
@@ -96,18 +77,48 @@ public class WorldManager : MonoBehaviour
             tiles.Add(mover);
         }
     }
-    public void SetObstaclesPerSegment(int value)
+
+    private void RecycleFirst()
     {
-        obstaclesPerSegment = Mathf.Clamp(value, 0, 8);
+        var mover = tiles[0];
+        tiles.RemoveAt(0);
+
+        // Сдвигаем за последний
+        float newZ = tiles.Count > 0
+            ? tiles[^1].transform.position.z + tiles[^1].Length
+            : player.position.z;
+        mover.transform.position = new Vector3(0, 0, newZ);
+
+        SetupSegment(mover);
+        tiles.Add(mover);
     }
 
+    /// <summary>
+    /// Спавнит в сегмент ровно obstaclesPerSegment препятствий,
+    /// но только если сегмент находится дальше obstacleDelayDistance от игрока.
+    /// </summary>
     private void SetupSegment(RoadMover mover)
     {
         var seg = mover.GetComponentInChildren<RoadSegment>(true);
         if (seg == null) return;
 
-        // Не спавнить до истечения задержки
-        int target = time < obstacleDelaySeconds ? 0 : obstaclesPerSegment;
+        // Вычисляем дистанцию по Z между серединой сегмента и игроком
+        float segmentCenterZ = mover.transform.position.z;
+        float playerZ       = player.position.z;
+        float distance      = segmentCenterZ - playerZ;
+
+        int target = distance < obstacleDelayDistance
+            ? 0
+            : obstaclesPerSegment;
+
         seg.Populate(pool, target);
+    }
+
+    /// <summary>
+    /// Публичный метод для динамического изменения числа препятствий.
+    /// </summary>
+    public void SetObstaclesPerSegment(int value)
+    {
+        obstaclesPerSegment = Mathf.Clamp(value, 0, 8);
     }
 }
